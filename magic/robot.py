@@ -1,4 +1,5 @@
 from components.octocanum import Octocanum
+from components.octocanum_state import OctocanumState
 from components.octomodule import OctoModule
 from magicbot import MagicRobot
 from phoenix6 import CANBus
@@ -9,6 +10,7 @@ from wpimath import apply_deadband, units
 
 class MyRobot(MagicRobot):
     octocanum: Octocanum
+    octocanum_state: OctocanumState
 
     front_left: OctoModule
     front_right: OctoModule
@@ -48,6 +50,6 @@ class MyRobot(MagicRobot):
         right_x = apply_deadband(self.joy.get_right_x(), 0.1)
 
         if self.joy.get_left_trigger() >= 0.8:  # switch between tank and mecanum
-            self.octocanum.arcade_drive(left_x, right_x)
+            self.octocanum_state.arcade_drive(left_x, right_x)
         else:
-            self.octocanum.cartesian_drive(left_x, left_y, right_x)
+            self.octocanum_state.cartesian_drive(left_x, left_y, right_x)

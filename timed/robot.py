@@ -1,6 +1,6 @@
 from subsystems.octocanum import Octocanum
 from subsystems.octomodule import OctoModule
-from wpilib import CANPort, Gamepad, TimedRobot
+from wpilib import CANPort, Gamepad, TimedRobot, Timer
 from wpimath import apply_deadband, units
 
 
@@ -70,3 +70,25 @@ class MyRobot(TimedRobot):
             self.octocanum.arcade_drive(left_x, right_x)
         else:
             self.octocanum.cartesian_drive(left_x, left_y, right_x)
+
+    def autonomous_init(self) -> None:
+        self.tank_back_time = 2.0
+        self.mec_strafe_time = 1.0 + self.tank_back_time
+        self.tank_spin_time = 4.0 + self.mec_strafe_time
+
+        self.auto_start_time = Timer.get_monotonic_timestamp()
+
+    def autonomous_periodic(self) -> None:
+        time_in_auto = abs(Timer.get_monotonic_timestamp() - self.auto_start_time)
+
+        if time_in_auto <= self.tank_back_time:
+            self.octocanum.arcade_drive(-1.0, 0.0)
+
+        elif time_in_auto <= self.mec_strafe_time:
+            self.octocanum.cartesian_drive(0.5, 0.5, 0.5)
+
+        elif time_in_auto <= self.tank_spin_time:
+            self.octocanum.arcade_drive(0.0, 1.0)
+
+        else:
+            pass

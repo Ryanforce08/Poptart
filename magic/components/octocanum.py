@@ -86,7 +86,7 @@ class Octocanum:
     def get_mode(self) -> OctoMode:
         return self.octo_state
 
-    @feedback  # sends return to network tables
+    @feedback
     def get_octo_mode_nt(self) -> str:
         return self.octo_state.name
 
